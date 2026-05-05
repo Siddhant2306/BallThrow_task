@@ -1,0 +1,74 @@
+# =========================
+# Unity Generated Folders
+# =========================
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+UserSettings/
+
+# =========================
+# Unity Cache / Auto Files
+# =========================
+MemoryCaptures/
+Recordings/
+
+# =========================
+# Visual Studio / Rider
+# =========================
+.vs/
+.vscode/
+.idea/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+
+# =========================
+# OS Files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Android / Build Artifacts
+# =========================
+*.apk
+*.aab
+*.keystore
+*.keystore-jks
+*.gradle/
+.gradle/
+build/
+
+# =========================
+# Crash / Logs
+# =========================
+sysinfo.txt
+
+# =========================
+# Unity Addressables / Cache
+# =========================
+/Assets/AddressableAssetsData/*/*.bin*
+/Assets/StreamingAssets/aa.meta
+/Assets/StreamingAssets/aa/*
+
+# =========================
+# Ignore Lighting Cache
+# =========================
+/Assets/LightmapSnapshot*.exr
+/Assets/LightmapSnapshot*.png
+
+# =========================
+# Ignore Generated NavMesh
+# =========================
+/Assets/NavMesh.asset
