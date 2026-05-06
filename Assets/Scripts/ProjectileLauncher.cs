@@ -37,8 +37,11 @@ public partial class ProjectileLauncher : MonoBehaviour
     private bool isDragging;
     private bool hasLaunched;
     private int activePointerId = -1;
+    private float currentPower01;
 
     public bool HasLaunched => hasLaunched;
+    public bool IsDragging => isDragging;
+    public float CurrentPower01 => currentPower01;
 
     public event Action<Vector3> Launched;
     public event Action Reset;
@@ -63,6 +66,7 @@ public partial class ProjectileLauncher : MonoBehaviour
         rb.angularVelocity = Vector3.zero;
 
         CaptureInitialPose();
+        currentPower01 = 0f;
 
         cachedBallRadius = ResolveBallRadius(transform, GetComponent<Collider>());
         CreateTrajectoryDots();
@@ -105,6 +109,7 @@ public partial class ProjectileLauncher : MonoBehaviour
         dragStartWorld = worldDownPosition;
         isDragging = true;
         activePointerId = pointerId;
+        currentPower01 = 0f;
 
         if (debugLogs)
             Debug.Log($"Drag started at: {dragStartWorld} (pointerId={pointerId})");
@@ -113,6 +118,7 @@ public partial class ProjectileLauncher : MonoBehaviour
     private void UpdateDrag(Vector3 worldPosition)
     {
         Vector3 dragVector = ComputeDragVector(worldPosition);
+        currentPower01 = Mathf.Clamp01(dragVector.magnitude / Mathf.Max(0.0001f, maxDragDistance));
         Vector3 launchVelocity = ComputeLaunchVelocity(dragVector);
         ShowTrajectory(launchVelocity);
     }
@@ -120,6 +126,7 @@ public partial class ProjectileLauncher : MonoBehaviour
     private void EndDrag(Vector3 worldUpPosition)
     {
         Vector3 dragVector = ComputeDragVector(worldUpPosition);
+        currentPower01 = Mathf.Clamp01(dragVector.magnitude / Mathf.Max(0.0001f, maxDragDistance));
         Vector3 launchVelocity = ComputeLaunchVelocity(dragVector);
 
         if (debugLogs)
@@ -129,6 +136,7 @@ public partial class ProjectileLauncher : MonoBehaviour
 
         isDragging = false;
         activePointerId = -1;
+        currentPower01 = 0f;
         HideTrajectory();
     }
 
@@ -188,6 +196,7 @@ public partial class ProjectileLauncher : MonoBehaviour
 
         transform.SetPositionAndRotation(resetPosition, resetRotation);
         rb.Sleep();
+        currentPower01 = 0f;
 
         HideTrajectory();
         Reset?.Invoke();
@@ -212,4 +221,3 @@ public partial class ProjectileLauncher : MonoBehaviour
         trajectoryCollisionRadiusMultiplier = Mathf.Max(0.01f, trajectoryCollisionRadiusMultiplier);
     }
 }
-
