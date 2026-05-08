@@ -1,16 +1,9 @@
-using System.Collections;
 using BallThrow.Gameplay;
 using UnityEngine;
 
 [DisallowMultipleComponent]
 public class FailureHandler : MonoBehaviour
 {
-
-    [Header("Time")]
-    [SerializeField] private bool slowTimeOnFail = true;
-    [Range(0.05f, 1f)]
-    [SerializeField] private float slowTimeScale = 0.65f;
-    [SerializeField] private float slowTimeSeconds = 0.25f;
 
     [Header("Shake")]
     [SerializeField] private float shakeDuration = 0.16f;

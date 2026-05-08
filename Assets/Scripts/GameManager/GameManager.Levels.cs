@@ -1,25 +1,11 @@
-using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public partial class GameManager
 {
-    public void SetLevelIndex(int index)
-    {
-        levelIndex = Mathf.Max(1, index);
-        VLog($"SetLevelIndex -> {levelIndex}");
-    }
-
     public void RetryLevel()
     {
         Log("RetryLevel requested.");
         RestoreTimeScale();
-
-        if (launcher == null)
-        {
-            // Scene-based levels: retry means "reset the current ball attempt", not rebuild/destroy the scene.
-            ResolveReferences();
-            HookLauncher();
-        }
 
         if (launcher != null)
         {
@@ -27,7 +13,7 @@ public partial class GameManager
             return;
         }
 
-        Warn("Retry requested, but no ProjectileLauncher was found to reset.");
+        Warn("Retry requested, but GameManager has no ProjectileLauncher reference. Assign it in the Inspector.");
     }
 
     public void NextLevel()

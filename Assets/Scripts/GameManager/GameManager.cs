@@ -14,7 +14,6 @@ public partial class GameManager : MonoBehaviour
     [SerializeField] private SuccessHandler successHandler;
     [SerializeField] private FailureHandler failureHandler;
     [SerializeField] private UIController ui;
-    [SerializeField] private FeedbackManager feedback;
 
     [Header("Level Progress")]
     [Tooltip("Set per-level (1-based). Used for PlayerPrefs unlocks.")]
@@ -23,7 +22,6 @@ public partial class GameManager : MonoBehaviour
     [SerializeField] private string levelsUnlockedKey = "levels_unlocked";
 
     [Header("State")]
-    [SerializeField] private bool autoFindReferences = true;
     [SerializeField] private bool stopInputByDisablingLauncher = true;
 
     [Header("Debug")]
@@ -50,7 +48,6 @@ public partial class GameManager : MonoBehaviour
     public UnityEvent onFailure = new UnityEvent();
 
     public GameState State { get; private set; } = GameState.Idle;
-    public ProjectileLauncher Launcher => launcher;
 
     private float defaultFixedDeltaTime;
 

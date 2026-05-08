@@ -191,6 +191,8 @@ public partial class ProjectileLauncher : MonoBehaviour
 
         hasLaunched = true;
 
+        SetTrailEmitting(true);
+
         rb.useGravity = true;
         rb.isKinematic = false;
 

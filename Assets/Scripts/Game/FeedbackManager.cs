@@ -59,7 +59,7 @@ public class FeedbackManager : MonoBehaviour
         if (cameraTransform == null)
             return;
 
-        // Important: shake relative to the camera's CURRENT position (otherwise it snaps to (0,0,0) and looks like the level vanished).
+        // camera shake relative to the camera's CURRENT position.
         CaptureCameraBasePos();
 
         if (shakeRoutine != null)

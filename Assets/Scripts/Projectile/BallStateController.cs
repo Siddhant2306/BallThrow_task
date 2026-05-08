@@ -6,7 +6,6 @@ public class BallStateController : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private ProjectileLauncher launcher;
-    [SerializeField] private Rigidbody body;
     [SerializeField] private Renderer ballRenderer;
     [SerializeField] private TrailRenderer trail;
 
@@ -27,9 +26,6 @@ public class BallStateController : MonoBehaviour
     {
         if (launcher == null)
             launcher = GetComponent<ProjectileLauncher>();
-
-        if (body == null)
-            body = GetComponent<Rigidbody>();
 
         if (ballRenderer == null)
             ballRenderer = GetComponentInChildren<Renderer>(includeInactive: true);

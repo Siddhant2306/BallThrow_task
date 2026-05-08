@@ -8,7 +8,6 @@ public partial class GameManager
 
     private void Update()
     {
-        EnsureReferencesBound();
         TickState();
     }
 
