@@ -72,6 +72,23 @@ public partial class ProjectileLauncher : MonoBehaviour
         CreateTrajectoryDots();
     }
 
+    private bool EnsureRigidbody()
+    {
+        if (rb != null)
+            return true;
+
+        rb = GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            if (debugLogs)
+                Debug.Log("[BallThrow] ProjectileLauncher: rb was null, re-bound via GetComponent.", this);
+            return true;
+        }
+
+        Debug.LogError("[BallThrow] ProjectileLauncher: no Rigidbody found (required).", this);
+        return false;
+    }
+
     private void CaptureInitialPose()
     {
         if (resetPoint != null)
@@ -165,6 +182,9 @@ public partial class ProjectileLauncher : MonoBehaviour
 
     private void LaunchWithVelocity(Vector3 launchVelocity)
     {
+        if (!EnsureRigidbody())
+            return;
+
         hasLaunched = true;
 
         rb.useGravity = true;
@@ -193,6 +213,9 @@ public partial class ProjectileLauncher : MonoBehaviour
 
     public void ResetLauncher(Vector3 resetPosition, Quaternion resetRotation)
     {
+        if (!EnsureRigidbody())
+            return;
+
         hasLaunched = false;
         isDragging = false;
         activePointerId = -1;

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [DisallowMultipleComponent]
 public class LevelManager : MonoBehaviour
@@ -28,8 +29,50 @@ public class LevelManager : MonoBehaviour
     private int currentSeed;
     private LevelBuilder.BuiltLevel built;
 
+    private static bool IsSceneObject(Object obj)
+    {
+        if (obj == null)
+            return false;
+
+        if (obj is Component c)
+        {
+            Scene s = c.gameObject.scene;
+            return s.IsValid() && s.isLoaded;
+        }
+
+        if (obj is GameObject go)
+        {
+            Scene s = go.scene;
+            return s.IsValid() && s.isLoaded;
+        }
+
+        return true;
+    }
+
     private void Awake()
     {
+        // Avoid prefab-asset references (prefabs can’t reference scene objects, and calling gameplay methods on prefab assets breaks runtime state).
+        if (builder != null && !IsSceneObject(builder))
+        {
+            if (debugLogs)
+                Debug.LogWarning("[BallThrow] LevelManager: 'builder' reference was a prefab asset; clearing so we can auto-find the scene instance.", this);
+            builder = null;
+        }
+
+        if (launcher != null && !IsSceneObject(launcher))
+        {
+            if (debugLogs)
+                Debug.LogWarning("[BallThrow] LevelManager: 'launcher' reference was a prefab asset; clearing so we can auto-find the scene instance.", this);
+            launcher = null;
+        }
+
+        if (gameManager != null && !IsSceneObject(gameManager))
+        {
+            if (debugLogs)
+                Debug.LogWarning("[BallThrow] LevelManager: 'gameManager' reference was a prefab asset; clearing so we can auto-find the scene instance.", this);
+            gameManager = null;
+        }
+
         if (builder == null)
             builder = GetComponentInChildren<LevelBuilder>(includeInactive: true);
 
@@ -124,4 +167,3 @@ public class LevelManager : MonoBehaviour
         }
     }
 }
-

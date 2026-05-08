@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 [DisallowMultipleComponent]
 public class TargetNextLevel : MonoBehaviour
@@ -18,6 +19,14 @@ public class TargetNextLevel : MonoBehaviour
 
     private bool hasTriggered;
 
+    private void Log(string message)
+    {
+        if (!debugLogOnSuccess)
+            return;
+
+        Debug.Log($"[BallThrow] TargetNextLevel: {message}", this);
+    }
+
     private void OnEnable()
     {
         ResolveBall();
@@ -31,10 +40,25 @@ public class TargetNextLevel : MonoBehaviour
 
     private void ResolveBall()
     {
+        // If this component lives on a prefab asset, the Inspector can only reference other assets.
+        // That can leave `ball` pointing to the Ball prefab asset instead of the in-scene ball instance.
+        if (ball != null)
+        {
+            Scene scene = ball.gameObject.scene;
+            bool isSceneObject = scene.IsValid() && scene.isLoaded;
+            if (!isSceneObject)
+            {
+                Log($"ResolveBall: clearing non-scene ball reference '{ball.name}' (likely prefab asset).");
+                ball = null;
+            }
+        }
+
         if (ball != null)
             return;
 
         ball = FindAnyObjectByType<ProjectileLauncher>(FindObjectsInactive.Include);
+        if (ball != null)
+            Log($"ResolveBall: found scene ball '{ball.name}'.");
     }
 
     private void Subscribe()
@@ -61,53 +85,69 @@ public class TargetNextLevel : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Log($"OnTriggerEnter: other='{other.name}' otherRB='{(other.attachedRigidbody != null ? other.attachedRigidbody.name : "null")}'");
         TryTrigger(other.attachedRigidbody);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
+        Log($"OnCollisionEnter: other='{collision.collider.name}' rb='{(collision.rigidbody != null ? collision.rigidbody.name : "null")}'");
         TryTrigger(collision.rigidbody);
     }
 
     private void TryTrigger(Rigidbody otherBody)
     {
         if (onlyOncePerAttempt && hasTriggered)
+        {
+            Log("TryTrigger: ignored (already triggered this attempt).");
             return;
+        }
 
         if (otherBody == null)
+        {
+            Log("TryTrigger: ignored (otherBody was null).");
             return;
+        }
 
         if (!otherBody.TryGetComponent(out ProjectileLauncher hitBall))
+        {
+            Log($"TryTrigger: ignored (Rigidbody '{otherBody.name}' has no ProjectileLauncher).");
             return;
+        }
 
         if (ball == null)
         {
             ball = hitBall;
             Subscribe();
+            Log($"TryTrigger: bound ball to '{ball.name}'.");
         }
 
         if (ball != null && hitBall != ball)
+        {
+            Log($"TryTrigger: ignored (hitBall '{hitBall.name}' != bound ball '{ball.name}').");
             return;
+        }
 
         if (requireLaunchedBall && !hitBall.HasLaunched)
+        {
+            Log("TryTrigger: ignored (ball not launched yet).");
             return;
+        }
 
         hasTriggered = true;
 
-        if (debugLogOnSuccess)
-            Debug.Log("Target hit! Attempting success.", this);
+        Log($"Target hit! Attempting success. speed={otherBody.linearVelocity.magnitude:0.00} min={minSuccessSpeed:0.00}");
 
         bool successAccepted = false;
 
         if (GameManager.Instance != null)
         {
             successAccepted = GameManager.Instance.TrySuccess(otherBody, transform, minSuccessSpeed);
-            if (debugLogOnSuccess)
-                Debug.Log($"Target hit: TrySuccess returned {successAccepted}.", this);
+            Log($"TrySuccess returned {successAccepted} (GM state={GameManager.Instance.State}).");
         }
-        else if (debugLogOnSuccess)
+        else
         {
-            Debug.LogWarning("Target hit, but no GameManager.Instance found (success not applied).", this);
+            Log("Target hit, but no GameManager.Instance found (success not applied).");
         }
 
         if (successAccepted)
@@ -120,6 +160,10 @@ public class TargetNextLevel : MonoBehaviour
                 pulse.PlayPulse();
 
             onTargetHit?.Invoke();
+        }
+        else
+        {
+            Log("Success was not accepted (min speed / wrong ball / already ended).");
         }
     }
 }

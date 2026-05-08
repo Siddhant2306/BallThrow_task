@@ -19,18 +19,15 @@ public class GoalPulseOnSuccess : MonoBehaviour
     private static readonly int EmissionId = Shader.PropertyToID("_EmissionColor");
     private const string EmissionKeyword = "_EMISSION";
 
-    private readonly List<Renderer> glowRenderers = new List<Renderer>(32);
-    private readonly List<Color> baseEmissions = new List<Color>(32);
+    private readonly List<Material> glowMaterials = new List<Material>(16);
+    private readonly List<Color> baseEmissions = new List<Color>(16);
 
-    private MaterialPropertyBlock mpb;
     private Coroutine routine;
 
     private void Awake()
     {
         if (pulseTransform == null)
             pulseTransform = transform;
-
-        mpb = new MaterialPropertyBlock();
     }
 
     public void PlayPulse()
@@ -49,12 +46,11 @@ public class GoalPulseOnSuccess : MonoBehaviour
 
     private IEnumerator PulseRoutine()
     {
-        BuildGlowTargets();
-
-        if (glowRenderers.Count == 0)
+        BuildGlowMaterials();
+        if (glowMaterials.Count == 0)
         {
             if (debugLogs)
-                Debug.LogWarning("[BallThrow] GoalPulseOnSuccess: no renderers with _EmissionColor found under goal.", this);
+                Debug.LogWarning("[BallThrow] GoalPulseOnSuccess: no materials with _EmissionColor found under goal.", this);
 
             routine = null;
             yield break;
@@ -70,10 +66,10 @@ public class GoalPulseOnSuccess : MonoBehaviour
         {
             t += useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
             float u = Mathf.Clamp01(t / Mathf.Max(0.0001f, half));
-            u = 1f - (1f - u) * (1f - u) * (1f - u);
+            u = 1f - Mathf.Pow(1f - u, 3f);
 
             pulseTransform.localScale = Vector3.LerpUnclamped(startScale, peakScale, u);
-            ApplyEmission(glowColor * (glowIntensity * u));
+            ApplyEmission(u);
             yield return null;
         }
 
@@ -84,7 +80,7 @@ public class GoalPulseOnSuccess : MonoBehaviour
             u = u * u * u;
 
             pulseTransform.localScale = Vector3.LerpUnclamped(peakScale, startScale, u);
-            ApplyEmission(glowColor * (glowIntensity * (1f - u)));
+            ApplyEmission(1f - u);
             yield return null;
         }
 
@@ -93,85 +89,65 @@ public class GoalPulseOnSuccess : MonoBehaviour
         routine = null;
     }
 
-    private void BuildGlowTargets()
+    private void BuildGlowMaterials()
     {
-        glowRenderers.Clear();
+        glowMaterials.Clear();
         baseEmissions.Clear();
 
-        GetComponentsInChildren(true, glowRenderers);
-
-        for (int i = 0; i < glowRenderers.Count; i++)
+        Renderer[] renderers = GetComponentsInChildren<Renderer>(includeInactive: true);
+        for (int r = 0; r < renderers.Length; r++)
         {
-            Renderer r = glowRenderers[i];
-            if (r == null || !TryGetBaseEmission(r, out Color baseEmission))
-            {
-                glowRenderers.RemoveAt(i);
-                i--;
+            Renderer renderer = renderers[r];
+            if (renderer == null)
                 continue;
-            }
 
-            baseEmissions.Add(baseEmission);
+            // Use .materials so we don't modify shared asset materials.
+            Material[] mats = renderer.materials;
+            for (int m = 0; m < mats.Length; m++)
+            {
+                Material mat = mats[m];
+                if (mat == null || !mat.HasProperty(EmissionId))
+                    continue;
+
+                glowMaterials.Add(mat);
+                baseEmissions.Add(mat.GetColor(EmissionId));
+            }
         }
 
         if (debugLogs)
-            Debug.Log($"[BallThrow] GoalPulseOnSuccess: glow renderers={glowRenderers.Count}", this);
+            Debug.Log($"[BallThrow] GoalPulseOnSuccess: glow materials={glowMaterials.Count}", this);
     }
 
-    private bool TryGetBaseEmission(Renderer r, out Color baseEmission)
+    private void ApplyEmission(float strength01)
     {
-        baseEmission = Color.black;
-        Material[] mats = r.sharedMaterials;
-        if (mats == null || mats.Length == 0)
-            return false;
+        float strength = Mathf.Clamp01(strength01);
+        Color emission = glowColor * (glowIntensity * strength);
 
-        bool hasEmission = false;
-        bool captured = false;
-        for (int i = 0; i < mats.Length; i++)
+        for (int i = 0; i < glowMaterials.Count; i++)
         {
-            Material mat = mats[i];
-            if (mat == null || !mat.HasProperty(EmissionId))
+            Material mat = glowMaterials[i];
+            if (mat == null)
                 continue;
 
-            hasEmission = true;
-
+            // URP emission can fail to update if it starts at black; enforce keyword after setting.
+            mat.SetColor(EmissionId, emission);
             if (enableEmissionKeyword)
                 mat.EnableKeyword(EmissionKeyword);
-
-            if (!captured)
-            {
-                captured = true;
-                try { baseEmission = mat.GetColor(EmissionId); } catch { baseEmission = Color.black; }
-            }
-        }
-
-        return hasEmission;
-    }
-
-    private void ApplyEmission(Color emission)
-    {
-        for (int i = 0; i < glowRenderers.Count; i++)
-        {
-            Renderer r = glowRenderers[i];
-            if (r == null)
-                continue;
-
-            r.GetPropertyBlock(mpb);
-            mpb.SetColor(EmissionId, emission);
-            r.SetPropertyBlock(mpb);
         }
     }
 
     private void RestoreEmission()
     {
-        for (int i = 0; i < glowRenderers.Count; i++)
+        for (int i = 0; i < glowMaterials.Count; i++)
         {
-            Renderer r = glowRenderers[i];
-            if (r == null)
+            Material mat = glowMaterials[i];
+            if (mat == null)
                 continue;
 
-            r.GetPropertyBlock(mpb);
-            mpb.SetColor(EmissionId, baseEmissions[i]);
-            r.SetPropertyBlock(mpb);
+            mat.SetColor(EmissionId, baseEmissions[i]);
+            if (enableEmissionKeyword)
+                mat.EnableKeyword(EmissionKeyword);
         }
     }
 }
+
