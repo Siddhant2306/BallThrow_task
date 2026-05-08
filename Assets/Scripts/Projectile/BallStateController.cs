@@ -35,7 +35,7 @@ public class BallStateController : MonoBehaviour
             ballRenderer = GetComponentInChildren<Renderer>(includeInactive: true);
 
         if (trail == null)
-            trail = GetComponent<TrailRenderer>();
+            trail = GetComponentInChildren<TrailRenderer>(includeInactive: true);
 
         mpb = new MaterialPropertyBlock();
         ApplyColor(readyColor);
@@ -99,7 +99,7 @@ public class BallStateController : MonoBehaviour
 
         State = BallState.Success;
         ApplyColor(successColor);
-        SetTrail(true);
+        // Trail should only ever be enabled by the launch event.
     }
 
     public void MarkFailed()

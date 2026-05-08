@@ -68,11 +68,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 68169391021593524}
   m_SourcePrefab: {fileID: 100100000, guid: 5428710ba5ee66e4fb21e96684148dd4, type: 3}
---- !u!23 &3646205563471313045 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 9112210376065571509, guid: 5428710ba5ee66e4fb21e96684148dd4, type: 3}
-  m_PrefabInstance: {fileID: 5543086350297129504}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &4624517847954743153 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 5428710ba5ee66e4fb21e96684148dd4, type: 3}
@@ -97,7 +92,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 0.9
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &2949450871789806553
 MonoBehaviour:
@@ -115,8 +110,6 @@ MonoBehaviour:
   minSuccessSpeed: 2
   requireLaunchedBall: 1
   onlyOncePerAttempt: 1
-  successParticlesOverride: {fileID: 0}
-  successSoundOverride: {fileID: 0}
   debugLogOnSuccess: 1
   onTargetHit:
     m_PersistentCalls:
@@ -137,13 +130,9 @@ MonoBehaviour:
   scaleMultiplier: 1.12
   pulseDuration: 0.35
   useUnscaledTime: 1
-  glowRenderer: {fileID: 3646205563471313045}
-  glowRenderers: []
-  autoFindGlowRenderers: 1
-  useEmissionIfAvailable: 1
-  enableEmissionKeyword: 1
   glowColor: {r: 0.14360262, g: 0.9169811, b: 0.53029186, a: 1}
   glowIntensity: 2.2
+  enableEmissionKeyword: 1
   debugLogs: 1
 --- !u!4 &5433107892829652427 stripped
 Transform:

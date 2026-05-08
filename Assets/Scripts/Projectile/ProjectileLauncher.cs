@@ -30,6 +30,7 @@ public partial class ProjectileLauncher : MonoBehaviour
     private Camera cam;
     private GameObject[] dots = Array.Empty<GameObject>();
     private float cachedBallRadius = 0.25f;
+    private TrailRenderer cachedTrail;
 
     private Vector3 initialPosition;
     private Quaternion initialRotation;
@@ -50,6 +51,7 @@ public partial class ProjectileLauncher : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         cam = Camera.main;
+        cachedTrail = GetComponentInChildren<TrailRenderer>(includeInactive: true);
 
         if (cam == null)
         {
@@ -70,6 +72,8 @@ public partial class ProjectileLauncher : MonoBehaviour
 
         cachedBallRadius = ResolveBallRadius(transform, GetComponent<Collider>());
         CreateTrajectoryDots();
+
+        SetTrailEmitting(false);
     }
 
     private bool EnsureRigidbody()
@@ -216,6 +220,9 @@ public partial class ProjectileLauncher : MonoBehaviour
         if (!EnsureRigidbody())
             return;
 
+        // Prevent trail streaks while teleporting back to reset position.
+        SetTrailEmitting(false);
+
         hasLaunched = false;
         isDragging = false;
         activePointerId = -1;
@@ -232,6 +239,16 @@ public partial class ProjectileLauncher : MonoBehaviour
 
         HideTrajectory();
         Reset?.Invoke();
+    }
+
+    private void SetTrailEmitting(bool emitting)
+    {
+        if (cachedTrail == null)
+            return;
+
+        cachedTrail.emitting = emitting;
+        if (!emitting)
+            cachedTrail.Clear();
     }
 
     public void ResetLauncher(Vector3 resetPosition)

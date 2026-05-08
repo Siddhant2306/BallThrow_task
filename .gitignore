@@ -72,3 +72,6 @@ sysinfo.txt
 # Ignore Generated NavMesh
 # =========================
 /Assets/NavMesh.asset
+
+Settings.json
+debug.log

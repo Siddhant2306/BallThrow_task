@@ -75,12 +75,6 @@ public class SuccessHandler : MonoBehaviour
 
         if (ballBody != null)
         {
-            if (ballBody.TryGetComponent(out TrailRenderer trail))
-            {
-                trail.emitting = true;
-                trail.Clear();
-            }
-
             StartCoroutine(SettleRoutine(ballBody));
         }
 

@@ -12,31 +12,28 @@ public partial class GameManager
     public void RetryLevel()
     {
         Log("RetryLevel requested.");
+        RestoreTimeScale();
 
-        LevelManager levelManager = FindAnyObjectByType<LevelManager>(FindObjectsInactive.Include);
-        if (levelManager != null)
+        if (launcher == null)
         {
-            levelManager.RetryLevel();
-            return;
+            // Scene-based levels: retry means "reset the current ball attempt", not rebuild/destroy the scene.
+            ResolveReferences();
+            HookLauncher();
         }
 
         if (launcher != null)
+        {
             launcher.ResetLauncher();
-        else
-            Warn("Retry requested, but no launcher found.");
+            return;
+        }
+
+        Warn("Retry requested, but no ProjectileLauncher was found to reset.");
     }
 
     public void NextLevel()
     {
         Log("NextLevel requested.");
         RestoreTimeScale();
-
-        LevelManager levelManager = FindAnyObjectByType<LevelManager>(FindObjectsInactive.Include);
-        if (levelManager != null)
-        {
-            levelManager.NextLevel();
-            return;
-        }
 
         int currentBuildIndex = SceneManager.GetActiveScene().buildIndex;
         int nextIndex = currentBuildIndex + 1;
