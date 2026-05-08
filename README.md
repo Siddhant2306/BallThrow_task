@@ -163,7 +163,6 @@ To improve gameplay feel and responsiveness, the project includes:
 
 - Real-time trajectory preview
 - Dynamic force meter
-- Impact particles
 - Camera shake
 - Motion trails
 - Success/failure UI feedback
@@ -180,7 +179,7 @@ Some of the major development challenges included:
 - Maintaining stable physics behavior across different launch forces
 - Matching trajectory prediction with Rigidbody movement
 - Preventing generated gameplay objects from spawning outside the camera view (in the brach LevelBuilder)
-- Correctly handling trigger/collision-based success logic
+- Correctly handling trigger/collision-based success and failure logic
 - Managing gameplay states cleanly without duplicated transitions
 - Balancing responsiveness with realistic physics interaction
 - Supporting both mobile touch controls and editor testing
