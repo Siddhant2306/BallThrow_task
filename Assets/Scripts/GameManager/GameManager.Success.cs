@@ -3,7 +3,7 @@ using UnityEngine;
 
 public partial class GameManager
 {
-    public bool TrySuccess(Rigidbody triggeredBallBody, Transform goalTransform, float minSpeed, ParticleSystem overrideParticles = null, AudioClip overrideSound = null)
+    public bool TrySuccess(Rigidbody triggeredBallBody, Transform goalTransform, float minSpeed)
     {
         if (State == GameState.Failed || State == GameState.Success)
             return false;
@@ -21,11 +21,11 @@ public partial class GameManager
             return false;
 
         Log($"TrySuccess: accepted speed={triggeredBallBody.linearVelocity.magnitude:0.00} min={minSpeed:0.00}");
-        Succeed(goalTransform, overrideParticles, overrideSound);
+        Succeed(goalTransform);
         return true;
     }
 
-    private void Succeed(Transform goalTransform, ParticleSystem overrideParticles, AudioClip overrideSound)
+    private void Succeed(Transform goalTransform)
     {
         if (State is GameState.Success or GameState.Failed)
             return;
@@ -41,7 +41,7 @@ public partial class GameManager
             UnlockNextLevel();
 
         if (successHandler != null)
-            successHandler.PlaySuccess(launcher, ballBody, goalTransform, overrideParticles, overrideSound);
+            successHandler.PlaySuccess(launcher, ballBody, goalTransform);
 
         if (ui != null)
         {
