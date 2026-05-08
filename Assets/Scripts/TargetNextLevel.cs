@@ -6,8 +6,12 @@ public class TargetNextLevel : MonoBehaviour
 {
     [Header("Filtering")]
     [SerializeField] private ProjectileLauncher ball;
+    [SerializeField] private float minSuccessSpeed = 2f;
     [SerializeField] private bool requireLaunchedBall = true;
     [SerializeField] private bool onlyOncePerAttempt = true;
+
+    [Header("Debug")]
+    [SerializeField] private bool debugLogOnSuccess = true;
 
     [Header("Events")]
     public UnityEvent onTargetHit = new UnityEvent();
@@ -90,7 +94,32 @@ public class TargetNextLevel : MonoBehaviour
 
         hasTriggered = true;
 
-        Debug.Log("Target hit! TODO: proceed to next level (stub).", this);
-        onTargetHit?.Invoke();
+        if (debugLogOnSuccess)
+            Debug.Log("Target hit! Attempting success.", this);
+
+        bool successAccepted = false;
+
+        if (GameManager.Instance != null)
+        {
+            successAccepted = GameManager.Instance.TrySuccess(otherBody, transform, minSuccessSpeed);
+            if (debugLogOnSuccess)
+                Debug.Log($"Target hit: TrySuccess returned {successAccepted}.", this);
+        }
+        else if (debugLogOnSuccess)
+        {
+            Debug.LogWarning("Target hit, but no GameManager.Instance found (success not applied).", this);
+        }
+
+        if (successAccepted)
+        {
+            GoalPulseOnSuccess pulse =
+                GetComponentInParent<GoalPulseOnSuccess>(includeInactive: true) ??
+                GetComponentInChildren<GoalPulseOnSuccess>(includeInactive: true);
+
+            if (pulse != null)
+                pulse.PlayPulse();
+
+            onTargetHit?.Invoke();
+        }
     }
 }

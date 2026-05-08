@@ -86,6 +86,15 @@ public partial class ProjectileLauncher : MonoBehaviour
         }
     }
 
+    public void SetResetPoint(Transform newResetPoint)
+    {
+        resetPoint = newResetPoint;
+        CaptureInitialPose();
+
+        if (debugLogs)
+            Debug.Log($"[BallThrow] ProjectileLauncher.SetResetPoint -> {(resetPoint != null ? resetPoint.name : "null")}", this);
+    }
+
     private void Update()
     {
         if (hasLaunched)
