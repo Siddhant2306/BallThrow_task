@@ -13,7 +13,7 @@ The focus of the implementation was to create a clean gameplay architecture with
 ## GIF / Gameplay Showcase
 
 <p align="center">
-  <img src="Media/gameplay.gif" width="800"/>
+  <img src="Media/Ball_throw.gif" width="800"/>
 </p>
 
 ---
