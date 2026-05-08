@@ -127,10 +127,27 @@ On success:
 ## Failure
 
 Failure occurs when:
-- The projectile falls out of bounds
-- The shot loses useful momentum
-- The player misses the intended path
-- Invalid gameplay conditions occur
+
+### FailZone
+Triggered when the projectile falls into the designated fail area below the playable level.
+
+### HardImpact
+Triggered when the ball collides with an obstacle or surface with excessive impact force, causing the shot to fail.
+
+### MissedCurve
+Triggered when the projectile fails to correctly enter or interact with the intended curved ramp/surface.
+
+### TooSlow
+Triggered when the projectile loses too much momentum before reaching the target, making the shot invalid.
+
+### OutOfBounds
+Triggered when the projectile exits the valid gameplay area or camera bounds.
+
+### Timeout
+Triggered when the projectile remains active for too long without reaching a valid success condition.
+
+### Custom
+Reserved for additional future failure conditions or scripted gameplay events.
 
 On failure:
 - Gameplay input is stopped
@@ -162,7 +179,7 @@ Some of the major development challenges included:
 
 - Maintaining stable physics behavior across different launch forces
 - Matching trajectory prediction with Rigidbody movement
-- Preventing generated gameplay objects from spawning outside the camera view
+- Preventing generated gameplay objects from spawning outside the camera view (in the brach LevelBuilder)
 - Correctly handling trigger/collision-based success logic
 - Managing gameplay states cleanly without duplicated transitions
 - Balancing responsiveness with realistic physics interaction
@@ -174,7 +191,7 @@ Some of the major development challenges included:
 
 Given additional development time, the project could be extended with:
 
-- More advanced procedural generation
+- Should have procedural generation for level building
 - Additional moving obstacle types
 - Better visual polish and environment art
 - Sound effects and audio feedback
@@ -183,7 +200,7 @@ Given additional development time, the project could be extended with:
 - More advanced launch validation systems
 - Additional mobile optimization
 - Better procedural difficulty balancing
-- Enhanced camera systems and cinematic feedback
+- Enhanced camera systems using cinemachine 
 
 ---
 
@@ -197,7 +214,7 @@ Assets/
 │   ├── Gameplay/
 │   ├── UI/
 │   ├── Feedback/
-│   └── LevelBuilder/
+│   └── LevelBuilder/  (in the LevelBuilder branch)
 ├── Prefabs/
 ├── Materials/
 ├── Scenes/
