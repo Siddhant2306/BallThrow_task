@@ -41,15 +41,13 @@ public partial class GameManager
             UnlockNextLevel();
 
         if (successHandler != null)
-            successHandler.PlaySuccess(launcher, ballBody, goalTransform);
+            successHandler.PlaySuccess(ballBody);
 
         if (ui != null)
         {
             ui.HideEndScreen();
             ui.ShowSuccess(onNext: NextLevel, onRetry: RetryLevel);
         }
-
-        onSuccess?.Invoke();
     }
 
     private void UnlockNextLevel()

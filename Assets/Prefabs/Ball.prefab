@@ -318,6 +318,33 @@ MonoBehaviour:
   launcher: {fileID: 4819227549686928816}
   ballRenderer: {fileID: 7218594191158913762}
   trail: {fileID: -7276156845032640938}
+  dissolveOnFail: 1
+  dissolveProperty: _DissolveAmount
+  dissolveDuration: 0.35
+  dissolveCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   readyColor: {r: 1, g: 1, b: 1, a: 1}
   successColor: {r: 0.2, g: 1, b: 0.6, a: 1}
   failedColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}

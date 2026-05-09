@@ -115,9 +115,6 @@ MonoBehaviour:
   requireLaunchedBall: 1
   onlyOncePerAttempt: 1
   debugLogOnSuccess: 1
-  onTargetHit:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &68169391021593524
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,11 +1,10 @@
 using BallThrow.Gameplay;
 using UnityEngine;
-using UnityEngine.Events;
 
 [DisallowMultipleComponent]
 public partial class GameManager : MonoBehaviour
 {
-    public static GameManager Instance { get; private set; }
+    public static GameManager Instance { get; private set; } //Singleton instance
 
     [Header("References")]
     [SerializeField] private ProjectileLauncher launcher;
@@ -42,13 +41,7 @@ public partial class GameManager : MonoBehaviour
     [SerializeField] private Vector2 yBounds = new Vector2(-20f, 200f);
     [SerializeField] private float maxAbsZ = 20f;
 
-    [Header("Events")]
-    public UnityEvent<GameState> onGameStateChanged = new UnityEvent<GameState>();
-    public UnityEvent onSuccess = new UnityEvent();
-    public UnityEvent onFailure = new UnityEvent();
-
-    public GameState State { get; private set; } = GameState.Idle;
-
+    public GameState State { get; private set; } = GameState.Idle; //State machine for game flow (inital state is Idle)
     private float defaultFixedDeltaTime;
 
     private void Log(string message)

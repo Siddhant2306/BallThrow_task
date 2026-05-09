@@ -15,6 +15,8 @@ public class UIController : MonoBehaviour
 
     [Header("Animation")]
     [SerializeField] private float popDuration = 0.22f;
+
+    [Header("Behavior")]
     [Tooltip("If enabled, Success screen shows RETRY in addition to NEXT.")]
     [SerializeField] private bool showRetryOnSuccess = false;
 
@@ -162,3 +164,4 @@ public class UIController : MonoBehaviour
         onRetry?.Invoke();
     }
 }
+

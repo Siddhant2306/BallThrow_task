@@ -21,8 +21,6 @@ public partial class GameManager
 
         Log($"State {previous} -> {State}");
         OnEnterState(State, previous);
-
-        onGameStateChanged?.Invoke(State);
     }
 
     private void TickState()

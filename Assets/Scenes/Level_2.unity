@@ -2807,11 +2807,9 @@ MonoBehaviour:
   successHandler: {fileID: 1076507083}
   failureHandler: {fileID: 974559214}
   ui: {fileID: 300959780}
-  feedback: {fileID: 1426979149}
   levelIndex: 1
   unlockNextLevelOnSuccess: 1
   levelsUnlockedKey: levels_unlocked
-  autoFindReferences: 1
   stopInputByDisablingLauncher: 1
   debugLogs: 1
   verboseLogs: 0
@@ -2825,15 +2823,6 @@ MonoBehaviour:
   xBounds: {x: -50, y: 50}
   yBounds: {x: -20, y: 200}
   maxAbsZ: 20
-  onGameStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  onSuccess:
-    m_PersistentCalls:
-      m_Calls: []
-  onFailure:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!4 &1805918375
 Transform:
   m_ObjectHideFlags: 0

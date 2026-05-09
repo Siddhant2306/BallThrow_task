@@ -17,15 +17,13 @@ public partial class GameManager
             ballState.MarkFailed();
 
         if (failureHandler != null)
-            failureHandler.PlayFailure(launcher, ballBody, at, reason, hitCollider);
+            failureHandler.PlayFailure(at, reason, hitCollider);
 
         if (ui != null)
         {
             ui.HideEndScreen();
             ui.ShowFailure(onRetry: RetryLevel);
         }
-
-        onFailure?.Invoke();
         return true;
     }
 }

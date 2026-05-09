@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 [DisallowMultipleComponent]
@@ -13,9 +12,6 @@ public class TargetNextLevel : MonoBehaviour
 
     [Header("Debug")]
     [SerializeField] private bool debugLogOnSuccess = true;
-
-    [Header("Events")]
-    public UnityEvent onTargetHit = new UnityEvent();
 
     private bool hasTriggered;
 
@@ -158,8 +154,6 @@ public class TargetNextLevel : MonoBehaviour
 
             if (pulse != null)
                 pulse.PlayPulse();
-
-            onTargetHit?.Invoke();
         }
         else
         {

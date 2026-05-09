@@ -4,7 +4,6 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class SuccessHandler : MonoBehaviour
 {
-
     [Header("Shake")]
     [SerializeField] private float shakeDuration = 0.12f;
     [SerializeField] private float shakeStrength = 0.12f;
@@ -15,18 +14,7 @@ public class SuccessHandler : MonoBehaviour
     [Header("References")]
     [SerializeField] private FeedbackManager feedback;
 
-    private Coroutine slowMoRoutine;
-
-    public void ResetState()
-    {
-        if (slowMoRoutine != null)
-        {
-            StopCoroutine(slowMoRoutine);
-            slowMoRoutine = null;
-        }
-    }
-
-    public void PlaySuccess(ProjectileLauncher launcher, Rigidbody ballBody, Transform goalTransform)
+    public void PlaySuccess(Rigidbody ballBody)
     {
         if (debugLogs)
             Debug.Log("[BallThrow] SuccessHandler.PlaySuccess", this);
@@ -38,10 +26,7 @@ public class SuccessHandler : MonoBehaviour
             feedback.Shake(shakeDuration, shakeStrength);
 
         if (ballBody != null)
-        {
             StartCoroutine(SettleRoutine(ballBody));
-        }
-
     }
 
     private IEnumerator SettleRoutine(Rigidbody body)
